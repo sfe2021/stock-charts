@@ -150,8 +150,8 @@ def generate_chart(stock_info):
 
     # 호버용 검정 trace (종가 1개만 표시)
     fig.add_trace(go.Scatter(
-        x=df.index, y=df['Close'], mode='markers', name='종가',
-        marker=dict(color='#000000', size=0.1), legendgroup='종가',
+        x=df.index, y=df['Close'], mode='lines', name='종가',
+        line=dict(color='#000000', width=0), legendgroup='종가',
         showlegend=False,
         hovertemplate='%{x|%Y-%m-%d}<br>종가: %{y:,.0f}원<extra></extra>',
     ))
