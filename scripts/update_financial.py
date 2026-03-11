@@ -373,6 +373,13 @@ def build_html(results, col_labels, items, market_cap_eok=None):
 </head>
 <body>
 {table}
+<script>
+function sendHeight() {{
+    window.parent.postMessage({{type:'iframe-height', height: document.body.scrollHeight}}, '*');
+}}
+window.addEventListener('load', sendHeight);
+new MutationObserver(sendHeight).observe(document.body, {{childList:true, subtree:true}});
+</script>
 </body>
 </html>'''
     return html

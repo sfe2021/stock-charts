@@ -148,5 +148,12 @@
 </tr>
 </tbody>
 </table>
+<script>
+function sendHeight() {
+    window.parent.postMessage({type:'iframe-height', height: document.body.scrollHeight}, '*');
+}
+window.addEventListener('load', sendHeight);
+new MutationObserver(sendHeight).observe(document.body, {childList:true, subtree:true});
+</script>
 </body>
 </html>
