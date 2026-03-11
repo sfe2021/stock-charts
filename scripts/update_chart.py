@@ -24,49 +24,69 @@ autofit_js = """
     var busy = false;
     var dataXMin, dataXMax;
 
+    function hasLen(a) { return a && typeof a.length === 'number' && a.length > 0; }
+
     function calcBounds() {
         dataXMin = Infinity; dataXMax = -Infinity;
-        for (var t = 0; t < gd.data.length; t++) {
-            var tr = gd.data[t];
-            if (!tr.x) continue;
+        var traces = gd._fullData || gd.data;
+        for (var t = 0; t < traces.length; t++) {
+            var tr = traces[t];
+            if (!hasLen(tr.x)) continue;
             for (var i = 0; i < tr.x.length; i++) {
                 if (tr.x[i] == null) continue;
                 var ts = new Date(tr.x[i]).getTime();
-                if (ts < dataXMin) dataXMin = ts;
-                if (ts > dataXMax) dataXMax = ts;
+                if (!isNaN(ts)) {
+                    if (ts < dataXMin) dataXMin = ts;
+                    if (ts > dataXMax) dataXMax = ts;
+                }
             }
         }
     }
 
     function autofit() {
+        if (!gd._fullData || !gd._fullLayout) return;
         if (dataXMin === undefined) calcBounds();
 
         var xRange = gd._fullLayout.xaxis.range;
         if (!xRange) return;
         var xMin = new Date(xRange[0]).getTime();
         var xMax = new Date(xRange[1]).getTime();
+        if (isNaN(xMin) || isNaN(xMax)) return;
 
+        // x축 클램핑 (데이터 범위 밖으로 이동 방지)
+        var update = {};
         var clamped = false;
         if (xMin < dataXMin) { xMin = dataXMin; clamped = true; }
         if (xMax > dataXMax) { xMax = dataXMax; clamped = true; }
+        if (clamped) {
+            update['xaxis.range'] = [new Date(xMin).toISOString(), new Date(xMax).toISOString()];
+        }
 
+        // y축 최적화 (_fullData + TypedArray(Float64Array) 지원)
         var yMin = Infinity, yMax = -Infinity;
-        for (var t = 0; t < gd.data.length; t++) {
-            var tr = gd.data[t];
-            if (!tr.x) continue;
-            if (tr.type === 'candlestick') {
+        var traces = gd._fullData;
+        for (var t = 0; t < traces.length; t++) {
+            var tr = traces[t];
+            if (!hasLen(tr.x)) continue;
+            if (tr.type === 'candlestick' || tr.type === 'ohlc') {
+                var high = tr.high, low = tr.low;
+                if (!hasLen(high) || !hasLen(low)) continue;
                 for (var i = 0; i < tr.x.length; i++) {
                     var ts = new Date(tr.x[i]).getTime();
                     if (ts < xMin || ts > xMax) continue;
-                    if (tr.high && tr.high[i] != null && tr.high[i] > yMax) yMax = tr.high[i];
-                    if (tr.low && tr.low[i] != null && tr.low[i] < yMin) yMin = tr.low[i];
+                    var h = high[i], l = low[i];
+                    if (h === h && h > yMax) yMax = h;
+                    if (l === l && l < yMin) yMin = l;
                 }
-            } else if (tr.y) {
+            } else if (hasLen(tr.y)) {
                 for (var i = 0; i < tr.x.length; i++) {
                     var ts = new Date(tr.x[i]).getTime();
-                    if (ts < xMin || ts > xMax || tr.y[i] == null) continue;
-                    if (tr.y[i] < yMin) yMin = tr.y[i];
-                    if (tr.y[i] > yMax) yMax = tr.y[i];
+                    if (ts < xMin || ts > xMax) continue;
+                    var v = tr.y[i];
+                    if (v === v) {
+                        if (v < yMin) yMin = v;
+                        if (v > yMax) yMax = v;
+                    }
                 }
             }
         }
@@ -74,10 +94,11 @@ autofit_js = """
         if (yMin < Infinity && yMax > -Infinity) {
             var range = yMax - yMin;
             var pad = Math.max(range * 0.08, yMax * 0.02, 100);
-            var update = { 'yaxis.range': [yMin - pad, yMax + pad] };
-            if (clamped) {
-                update['xaxis.range'] = [new Date(xMin).toISOString(), new Date(xMax).toISOString()];
-            }
+            update['yaxis.range'] = [yMin - pad, yMax + pad];
+            update['yaxis.autorange'] = false;
+        }
+
+        if (Object.keys(update).length > 0) {
             busy = true;
             Plotly.relayout(gd, update).then(function() {
                 setTimeout(function() { busy = false; }, 50);
