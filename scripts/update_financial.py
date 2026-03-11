@@ -32,6 +32,15 @@ STOCKS = [
         'annual_file': 'skc_financial.html',
         'quarter_file': 'skc_financial_q.html',
     },
+    {
+        'name': '한글과컴퓨터',
+        'code': '030520',
+        'corp_code': '00204262',
+        'ticker': '030520.KQ',
+        'capital': 13465674000,  # 자본금 약 134.6억원
+        'annual_file': 'hancom_financial.html',
+        'quarter_file': 'hancom_financial_q.html',
+    },
 ]
 
 # ===== DART API 헬퍼 =====

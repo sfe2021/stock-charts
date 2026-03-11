@@ -9,6 +9,7 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STOCKS = [
     {"ticker": "043150.KQ", "name": "바텍", "code": "043150", "filename": "vatech.html"},
     {"ticker": "011790.KS", "name": "SKC", "code": "011790", "filename": "skc.html"},
+    {"ticker": "030520.KQ", "name": "한글과컴퓨터", "code": "030520", "filename": "hancom.html"},
 ]
 
 MA_DAYS = 60
