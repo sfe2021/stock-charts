@@ -399,7 +399,7 @@ def update_stock(stock_info, force=False):
     # ===== 연간 (최근 5년) =====
     print(f'[{name}] Fetching annual data...')
     annual_results = {}
-    annual_years = list(range(cur_year - 5, cur_year + 1))  # 최근 6년 시도 (데이터 없는 연도는 자동 스킵)
+    annual_years = list(range(cur_year - 6, cur_year + 1))  # 넉넉히 7년 시도, 최근 5년만 사용
 
     for y in annual_years:
         print(f'  {y}...', end=' ')
@@ -413,6 +413,11 @@ def update_stock(stock_info, force=False):
             print('OK')
         else:
             print('no data')
+
+    # 최근 5년만 유지
+    if len(annual_results) > 5:
+        keys = sorted(annual_results.keys())[-5:]
+        annual_results = {k: annual_results[k] for k in keys}
 
     if not annual_results:
         print(f'[{name}] No annual data available.')
@@ -446,7 +451,7 @@ def update_stock(stock_info, force=False):
         f.write(annual_html)
     print(f'[{name}] Annual: {stock_info["annual_file"]}')
 
-    # ===== 분기 (최근 4분기) =====
+    # ===== 분기 (최근 5분기) =====
     print(f'[{name}] Fetching quarterly data...')
     quarter_results = {}
     # 보고서코드: 11013=1Q, 11012=2Q(반기), 11014=3Q, 11011=4Q(사업보고서)
@@ -454,11 +459,11 @@ def update_stock(stock_info, force=False):
         ('11013', 'Q1'), ('11012', 'Q2'), ('11014', 'Q3'), ('11011', 'Q4'),
     ]
 
-    # 최근 4분기 역순 탐색
+    # 최근 5분기 역순 탐색
     quarters_found = []
     for check_year in range(cur_year, cur_year - 3, -1):
         for reprt_code, q_label in reversed(quarter_codes):
-            if len(quarters_found) >= 4:
+            if len(quarters_found) >= 5:
                 break
             key = f'{check_year}/{q_label}'
             print(f'  {key}...', end=' ')
@@ -472,7 +477,7 @@ def update_stock(stock_info, force=False):
                 print('OK')
             else:
                 print('no data')
-        if len(quarters_found) >= 4:
+        if len(quarters_found) >= 5:
             break
 
     if quarters_found:
