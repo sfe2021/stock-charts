@@ -140,11 +140,18 @@ def generate_chart(stock_info):
     fig.add_trace(go.Scatter(
         x=up_x, y=up_y, mode='lines', name='종가',
         line=dict(color='#EF5350', width=1.5), legendgroup='종가',
-        hovertemplate='%{x|%Y-%m-%d}<br>종가: %{y:,.0f}원<extra></extra>',
+        hoverinfo='skip',
     ))
     fig.add_trace(go.Scatter(
         x=dn_x, y=dn_y, mode='lines', name='종가',
         line=dict(color='#2962FF', width=1.5), legendgroup='종가',
+        showlegend=False, hoverinfo='skip',
+    ))
+
+    # 호버용 투명 종가 trace (1개만 표시)
+    fig.add_trace(go.Scatter(
+        x=df.index, y=df['Close'], mode='lines', name='종가',
+        line=dict(color='rgba(0,0,0,0)', width=0), legendgroup='종가',
         showlegend=False,
         hovertemplate='%{x|%Y-%m-%d}<br>종가: %{y:,.0f}원<extra></extra>',
     ))
