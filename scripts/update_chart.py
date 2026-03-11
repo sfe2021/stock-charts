@@ -167,7 +167,7 @@ def generate_chart(stock_info):
         margin=dict(l=10, r=10, t=105, b=30),
         dragmode='pan',
         xaxis=dict(type='date', rangeslider=dict(visible=False)),
-        yaxis=dict(tickformat=',', side='right', fixedrange=True, automargin=True),
+        yaxis=dict(tickformat=',', hoverformat=',.0f', side='right', fixedrange=True, automargin=True),
     )
 
     # 기간 선택 버튼
