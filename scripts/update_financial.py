@@ -357,7 +357,12 @@ def build_html(results, col_labels, items, market_cap_eok=None):
         table += f'<td style="text-align: right; width: 25.5814%;"><span style="color: #000000;">{row_label}</span></td>\n'
         for key in results:
             val = formatter(results[key])
-            table += f'<td style="text-align: right; width: {74.4186/len(col_labels):.4f}%;"><span style="color: #000000;">{val}</span></td>\n'
+            # 마이너스(-) 값은 빨간색 표시 (v4 규칙)
+            if val.startswith('-') and val != '-':
+                color = '#ff0000'
+            else:
+                color = '#000000'
+            table += f'<td style="text-align: right; width: {74.4186/len(col_labels):.4f}%;"><span style="color: {color};">{val}</span></td>\n'
         table += '</tr>\n'
 
     table += '</tbody>\n</table>'
