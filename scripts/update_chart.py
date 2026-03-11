@@ -20,7 +20,7 @@ autofit_js = """
     var gd = document.querySelectorAll('.plotly-graph-div')[0];
     if (!gd) return;
 
-    var skipNext = false;
+    var busy = false;
 
     function autofit() {
         var xRange = gd._fullLayout.xaxis.range;
@@ -49,24 +49,29 @@ autofit_js = """
         if (yMin < Infinity && yMax > -Infinity) {
             var range = yMax - yMin;
             var pad = Math.max(range * 0.08, yMax * 0.02, 100);
-            skipNext = true;
+            busy = true;
             Plotly.relayout(gd, {
                 'yaxis.range': [yMin - pad, yMax + pad],
                 'yaxis2.range': [0, vMax * 1.1]
+            }).then(function() {
+                setTimeout(function() { busy = false; }, 50);
             });
         }
     }
 
     gd.on('plotly_relayout', function(ed) {
-        if (skipNext) { skipNext = false; return; }
-        if (ed && (ed['xaxis.range[0]'] || ed['xaxis.range'] || ed['xaxis.autorange'])) {
-            setTimeout(autofit, 100);
+        if (busy) return;
+        var keys = Object.keys(ed || {});
+        for (var i = 0; i < keys.length; i++) {
+            if (keys[i].indexOf('xaxis') === 0) {
+                setTimeout(autofit, 50);
+                return;
+            }
         }
     });
 
-    gd.on('plotly_afterplot', function() {
-        setTimeout(autofit, 200);
-    });
+    // 초기 로드 시 1회 실행
+    setTimeout(autofit, 500);
 })();
 </script>
 """
