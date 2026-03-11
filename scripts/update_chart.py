@@ -8,6 +8,7 @@ BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # ===== 종목 설정 =====
 STOCKS = [
     {"ticker": "043150.KQ", "name": "바텍", "code": "043150", "filename": "vatech.html"},
+    {"ticker": "011790.KS", "name": "SKC", "code": "011790", "filename": "skc.html"},
 ]
 
 MA_DAYS = 60

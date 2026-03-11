@@ -23,6 +23,15 @@ STOCKS = [
         'annual_file': 'vatech_financial.html',
         'quarter_file': 'vatech_financial_q.html',
     },
+    {
+        'name': 'SKC',
+        'code': '011790',
+        'corp_code': '00139889',
+        'ticker': '011790.KS',
+        'capital': 0,  # DART에서 자동 조회
+        'annual_file': 'skc_financial.html',
+        'quarter_file': 'skc_financial_q.html',
+    },
 ]
 
 # ===== DART API 헬퍼 =====
