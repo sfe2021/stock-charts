@@ -363,9 +363,9 @@ def build_html(results, col_labels, items, market_cap_eok=None):
   body {{ font-family: -apple-system, 'Malgun Gothic', sans-serif; background: #fff; }}
   table {{ font-size: 13px; }}
   td {{ padding: 4px 8px; border: 1px solid #ddd; }}
+  tr:nth-child(even) {{ background-color: #f9f9f9; }}
   {header_css} {{ background-color: #4a4a4a; }}
   {header_css} td {{ font-weight: bold; color: #ffffff; }}
-  tr:nth-child(even) {{ background-color: #f9f9f9; }}
 </style>
 </head>
 <body>

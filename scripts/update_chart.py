@@ -20,15 +20,35 @@ autofit_js = """
     if (!gd) return;
 
     var busy = false;
+    var dataXMin, dataXMax;
+
+    function calcBounds() {
+        dataXMin = Infinity; dataXMax = -Infinity;
+        for (var t = 0; t < gd.data.length; t++) {
+            var tr = gd.data[t];
+            if (!tr.x) continue;
+            for (var i = 0; i < tr.x.length; i++) {
+                if (tr.x[i] == null) continue;
+                var ts = new Date(tr.x[i]).getTime();
+                if (ts < dataXMin) dataXMin = ts;
+                if (ts > dataXMax) dataXMax = ts;
+            }
+        }
+    }
 
     function autofit() {
+        if (dataXMin === undefined) calcBounds();
+
         var xRange = gd._fullLayout.xaxis.range;
         if (!xRange) return;
         var xMin = new Date(xRange[0]).getTime();
         var xMax = new Date(xRange[1]).getTime();
 
-        var yMin = Infinity, yMax = -Infinity;
+        var clamped = false;
+        if (xMin < dataXMin) { xMin = dataXMin; clamped = true; }
+        if (xMax > dataXMax) { xMax = dataXMax; clamped = true; }
 
+        var yMin = Infinity, yMax = -Infinity;
         for (var t = 0; t < gd.data.length; t++) {
             var tr = gd.data[t];
             if (!tr.x || !tr.y) continue;
@@ -43,10 +63,12 @@ autofit_js = """
         if (yMin < Infinity && yMax > -Infinity) {
             var range = yMax - yMin;
             var pad = Math.max(range * 0.08, yMax * 0.02, 100);
+            var update = { 'yaxis.range': [yMin - pad, yMax + pad] };
+            if (clamped) {
+                update['xaxis.range'] = [new Date(xMin).toISOString(), new Date(xMax).toISOString()];
+            }
             busy = true;
-            Plotly.relayout(gd, {
-                'yaxis.range': [yMin - pad, yMax + pad]
-            }).then(function() {
+            Plotly.relayout(gd, update).then(function() {
                 setTimeout(function() { busy = false; }, 50);
             });
         }
@@ -63,7 +85,6 @@ autofit_js = """
         }
     });
 
-    // 초기 로드 시 1회 실행
     setTimeout(autofit, 500);
 })();
 </script>
