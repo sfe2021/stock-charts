@@ -148,24 +148,12 @@ def generate_chart(stock_info):
         showlegend=False, hoverinfo='skip',
     ))
 
-    # 호버용 투명 trace (상승=빨강, 하락=파랑 색상 표시)
-    hover_up_x, hover_up_y, hover_dn_x, hover_dn_y = [], [], [], []
-    for i in range(len(df)):
-        if i == 0 or df['Close'].iloc[i] >= df['Close'].iloc[i-1]:
-            hover_up_x.append(df.index[i]); hover_up_y.append(df['Close'].iloc[i])
-        else:
-            hover_dn_x.append(df.index[i]); hover_dn_y.append(df['Close'].iloc[i])
-
-    hover_tpl = '%{x|%Y-%m-%d}<br>종가: %{y:,.0f}원<extra></extra>'
+    # 호버용 검정 trace (종가 1개만 표시)
     fig.add_trace(go.Scatter(
-        x=hover_up_x, y=hover_up_y, mode='markers', name='종가',
-        marker=dict(color='#EF5350', size=0.1), legendgroup='종가',
-        showlegend=False, hovertemplate=hover_tpl,
-    ))
-    fig.add_trace(go.Scatter(
-        x=hover_dn_x, y=hover_dn_y, mode='markers', name='종가',
-        marker=dict(color='#2962FF', size=0.1), legendgroup='종가',
-        showlegend=False, hovertemplate=hover_tpl,
+        x=df.index, y=df['Close'], mode='markers', name='종가',
+        marker=dict(color='#000000', size=0.1), legendgroup='종가',
+        showlegend=False,
+        hovertemplate='%{x|%Y-%m-%d}<br>종가: %{y:,.0f}원<extra></extra>',
     ))
 
     # 60일 이동평균선
