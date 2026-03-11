@@ -321,21 +321,20 @@ def build_html(results, col_labels, items, market_cap_eok=None):
     col_w = 74.4186 / len(col_labels)
     table = '<table style="background-color: #ffffff; color: #3c3c3c; text-align: left; border-collapse: collapse; width: 100%;" border="1" data-ke-align="alignLeft" data-ke-style="style12">\n<tbody>\n'
 
+    # 시가총액 행 (맨 위, 헤더 스타일)
+    if market_cap_eok is not None:
+        cap_str = f'{market_cap_eok:,}'
+        table += '<tr>\n'
+        table += '<td style="text-align: right; width: 25.5814%;"><span style="color: #ffffff;">시가총액(억원)</span></td>\n'
+        table += f'<td style="text-align: right; width: {col_w * len(col_labels):.4f}%;" colspan="{len(col_labels)}"><span style="color: #ffffff;"><b>{cap_str}</b></span></td>\n'
+        table += '</tr>\n'
+
     # Header
     table += '<tr>\n'
     table += '<td style="text-align: right; width: 25.5814%; color: #ffffff;">주요 재무 정보</td>\n'
     for label in col_labels:
         table += f'<td style="text-align: right; width: {col_w:.4f}%;"><span style="color: #ffffff;">{label}</span></td>\n'
     table += '</tr>\n'
-
-    # 시가총액 행
-    if market_cap_eok is not None:
-        table += '<tr>\n'
-        table += '<td style="text-align: right; width: 25.5814%;"><span style="color: #000000;">시가총액(억원)</span></td>\n'
-        cap_str = f'{market_cap_eok:,}'
-        # 전체 열 병합
-        table += f'<td style="text-align: right; width: {col_w * len(col_labels):.4f}%;" colspan="{len(col_labels)}"><span style="color: #000000;"><b>{cap_str}</b></span></td>\n'
-        table += '</tr>\n'
 
     # Data rows
     for row_label, formatter in items:
@@ -348,6 +347,12 @@ def build_html(results, col_labels, items, market_cap_eok=None):
 
     table += '</tbody>\n</table>'
 
+    # 시가총액 있으면 첫 2행, 없으면 첫 1행에 헤더 스타일 적용
+    if market_cap_eok is not None:
+        header_css = 'tr:nth-child(-n+2)'
+    else:
+        header_css = 'tr:first-child'
+
     html = f'''<!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -358,8 +363,8 @@ def build_html(results, col_labels, items, market_cap_eok=None):
   body {{ font-family: -apple-system, 'Malgun Gothic', sans-serif; background: #fff; }}
   table {{ font-size: 13px; }}
   td {{ padding: 4px 8px; border: 1px solid #ddd; }}
-  tr:first-child {{ background-color: #4a4a4a; }}
-  tr:first-child td {{ font-weight: bold; color: #ffffff; }}
+  {header_css} {{ background-color: #4a4a4a; }}
+  {header_css} td {{ font-weight: bold; color: #ffffff; }}
   tr:nth-child(even) {{ background-color: #f9f9f9; }}
 </style>
 </head>
