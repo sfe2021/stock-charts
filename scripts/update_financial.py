@@ -28,7 +28,7 @@ STOCKS = [
         'code': '011790',
         'corp_code': '00139889',
         'ticker': '011790.KS',
-        'capital': 0,  # DART에서 자동 조회
+        'capital': 16312750000,  # 자본금 약 163억원 (2024 사업보고서 기준)
         'annual_file': 'skc_financial.html',
         'quarter_file': 'skc_financial_q.html',
     },
@@ -123,9 +123,10 @@ def process_financial(acnt, acnt_all, div_data, stock_data, capital):
         amt = int(amt_s.replace(',', ''))
 
         if '포괄손익' in sj:
-            if '지배기업' in acct and ('당기순이익' in acct or '소유주지분' in acct):
-                r['순이익_지배'] = amt
-            elif '비지배지분' in acct and ('당기순이익' in acct or acct.strip() == '비지배지분'):
+            if '지배기업' in acct or '지배주주' in acct:
+                if '당기순이익' in acct or '당기순손익' in acct or '소유주지분' in acct or '귀속' in acct:
+                    r['순이익_지배'] = amt
+            elif '비지배지분' in acct and ('당기순이익' in acct or '당기순손익' in acct or acct.strip() == '비지배지분'):
                 r['순이익_비지배'] = amt
 
         if '재무상태표' in sj:
@@ -147,7 +148,7 @@ def process_financial(acnt, acnt_all, div_data, stock_data, capital):
                 r['투자CF'] = amt
             elif '재무활동' in acct and '현금흐름' in acct:
                 r['재무CF'] = amt
-            elif ('유형자산의 취득' in acct or '유형자산취득' in acct) and '무형' not in acct:
+            elif '유형자산' in acct and '취득' in acct and '무형' not in acct:
                 r['CAPEX'] = amt
 
     # --- 자본금 ---
@@ -252,19 +253,19 @@ def calc_per_pbr(r, price):
 EOK = 100000000
 
 def fmt_eok(v):
-    if v is None: return ''
+    if v is None: return '-'
     return str(round(v / EOK))
 
 def fmt_pct(v, d=1):
-    if v is None: return ''
+    if v is None: return '-'
     return f'{v:.{d}f}'
 
 def fmt_won(v):
-    if v is None: return ''
+    if v is None: return '-'
     return f'{v:,}'
 
 def fmt_int(v):
-    if v is None: return ''
+    if v is None: return '-'
     return f'{v:,}'
 
 
