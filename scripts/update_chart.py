@@ -167,7 +167,11 @@ def generate_chart(stock_info):
         hovermode='x unified',
         margin=dict(l=10, r=10, t=105, b=30),
         dragmode='pan',
-        xaxis=dict(type='date', rangeslider=dict(visible=False)),
+        xaxis=dict(
+            type='date', rangeslider=dict(visible=False),
+            minallowed=df.index[0].isoformat(),
+            maxallowed=df.index[-1].isoformat(),
+        ),
         yaxis=dict(tickformat=',', side='right', fixedrange=True, automargin=True),
     )
 

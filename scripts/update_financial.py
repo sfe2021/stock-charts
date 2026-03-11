@@ -321,19 +321,22 @@ def build_html(results, col_labels, items, market_cap_eok=None):
     col_w = 74.4186 / len(col_labels)
     table = '<table style="background-color: #ffffff; color: #3c3c3c; text-align: left; border-collapse: collapse; width: 100%;" border="1" data-ke-align="alignLeft" data-ke-style="style12">\n<tbody>\n'
 
+    hdr_tr = 'style="background-color: #4a4a4a;"'
+    hdr_td = 'font-weight: bold; color: #ffffff;'
+
     # 시가총액 행 (맨 위, 헤더 스타일)
     if market_cap_eok is not None:
         cap_str = f'{market_cap_eok:,}'
-        table += '<tr>\n'
-        table += '<td style="text-align: right; width: 25.5814%;"><span style="color: #ffffff;">시가총액(억원)</span></td>\n'
-        table += f'<td style="text-align: right; width: {col_w * len(col_labels):.4f}%;" colspan="{len(col_labels)}"><span style="color: #ffffff;"><b>{cap_str}</b></span></td>\n'
+        table += f'<tr {hdr_tr}>\n'
+        table += f'<td style="text-align: right; width: 25.5814%; {hdr_td}"><span style="color: #ffffff;">시가총액(억원)</span></td>\n'
+        table += f'<td style="text-align: right; width: {col_w * len(col_labels):.4f}%; {hdr_td}" colspan="{len(col_labels)}"><span style="color: #ffffff;"><b>{cap_str}</b></span></td>\n'
         table += '</tr>\n'
 
     # Header
-    table += '<tr>\n'
-    table += '<td style="text-align: right; width: 25.5814%; color: #ffffff;">주요 재무 정보</td>\n'
+    table += f'<tr {hdr_tr}>\n'
+    table += f'<td style="text-align: right; width: 25.5814%; {hdr_td}"><span style="color: #ffffff;">주요 재무 정보</span></td>\n'
     for label in col_labels:
-        table += f'<td style="text-align: right; width: {col_w:.4f}%;"><span style="color: #ffffff;">{label}</span></td>\n'
+        table += f'<td style="text-align: right; width: {col_w:.4f}%; {hdr_td}"><span style="color: #ffffff;">{label}</span></td>\n'
     table += '</tr>\n'
 
     # Data rows
