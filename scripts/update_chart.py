@@ -52,12 +52,21 @@ autofit_js = """
         var yMin = Infinity, yMax = -Infinity;
         for (var t = 0; t < gd.data.length; t++) {
             var tr = gd.data[t];
-            if (!tr.x || !tr.y) continue;
-            for (var i = 0; i < tr.x.length; i++) {
-                var ts = new Date(tr.x[i]).getTime();
-                if (ts < xMin || ts > xMax || tr.y[i] == null) continue;
-                if (tr.y[i] < yMin) yMin = tr.y[i];
-                if (tr.y[i] > yMax) yMax = tr.y[i];
+            if (!tr.x) continue;
+            if (tr.type === 'candlestick') {
+                for (var i = 0; i < tr.x.length; i++) {
+                    var ts = new Date(tr.x[i]).getTime();
+                    if (ts < xMin || ts > xMax) continue;
+                    if (tr.high && tr.high[i] != null && tr.high[i] > yMax) yMax = tr.high[i];
+                    if (tr.low && tr.low[i] != null && tr.low[i] < yMin) yMin = tr.low[i];
+                }
+            } else if (tr.y) {
+                for (var i = 0; i < tr.x.length; i++) {
+                    var ts = new Date(tr.x[i]).getTime();
+                    if (ts < xMin || ts > xMax || tr.y[i] == null) continue;
+                    if (tr.y[i] < yMin) yMin = tr.y[i];
+                    if (tr.y[i] > yMax) yMax = tr.y[i];
+                }
             }
         }
 
@@ -127,34 +136,16 @@ def generate_chart(stock_info):
     # 차트 생성
     fig = go.Figure()
 
-    # 종가 라인 - 상승=빨강, 하락=파랑
-    up_x, up_y, dn_x, dn_y = [], [], [], []
-    for i in range(1, len(df)):
-        is_up = df['Close'].iloc[i] >= df['Close'].iloc[i-1]
-        seg_x = [df.index[i-1], df.index[i], None]
-        seg_y = [df['Close'].iloc[i-1], df['Close'].iloc[i], None]
-        if is_up:
-            up_x.extend(seg_x); up_y.extend(seg_y)
-        else:
-            dn_x.extend(seg_x); dn_y.extend(seg_y)
-
-    fig.add_trace(go.Scatter(
-        x=up_x, y=up_y, mode='lines', name='종가',
-        line=dict(color='#EF5350', width=1.5), legendgroup='종가',
-        hoverinfo='skip',
-    ))
-    fig.add_trace(go.Scatter(
-        x=dn_x, y=dn_y, mode='lines', name='종가',
-        line=dict(color='#2962FF', width=1.5), legendgroup='종가',
-        showlegend=False, hoverinfo='skip',
-    ))
-
-    # 호버용 검정 trace (종가 1개만 표시)
-    fig.add_trace(go.Scatter(
-        x=df.index, y=df['Close'], mode='lines', name='종가',
-        line=dict(color='#000000', width=0), legendgroup='종가',
-        showlegend=False,
-        hovertemplate='%{x|%Y-%m-%d}<br>종가: %{y:,.0f}원<extra></extra>',
+    # 캔들스틱(봉) 차트 - 상승=빨강, 하락=파랑
+    fig.add_trace(go.Candlestick(
+        x=df.index,
+        open=df['Open'],
+        high=df['High'],
+        low=df['Low'],
+        close=df['Close'],
+        name='주봉',
+        increasing=dict(line=dict(color='#EF5350'), fillcolor='#EF5350'),
+        decreasing=dict(line=dict(color='#2962FF'), fillcolor='#2962FF'),
     ))
 
     # 60일 이동평균선
