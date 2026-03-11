@@ -115,11 +115,27 @@ def generate_chart(stock_info):
         vertical_spacing=0.03, row_heights=[0.75, 0.25]
     )
 
-    # 종가 라인
+    # 종가 라인 - 상승=빨강, 하락=파랑
+    up_x, up_y, dn_x, dn_y = [], [], [], []
+    for i in range(1, len(df)):
+        is_up = df['Close'].iloc[i] >= df['Close'].iloc[i-1]
+        seg_x = [df.index[i-1], df.index[i], None]
+        seg_y = [df['Close'].iloc[i-1], df['Close'].iloc[i], None]
+        if is_up:
+            up_x.extend(seg_x); up_y.extend(seg_y)
+        else:
+            dn_x.extend(seg_x); dn_y.extend(seg_y)
+
     fig.add_trace(go.Scatter(
-        x=df.index, y=df['Close'], mode='lines', name='종가',
-        line=dict(color='#333333', width=1.5),
-        hovertemplate='%{x|%Y-%m-%d}<br>종가: %{y:,.0f}원<extra></extra>'
+        x=up_x, y=up_y, mode='lines', name='종가',
+        line=dict(color='#EF5350', width=1.5), legendgroup='종가',
+        hovertemplate='%{x|%Y-%m-%d}<br>종가: %{y:,.0f}원<extra></extra>',
+    ), row=1, col=1)
+    fig.add_trace(go.Scatter(
+        x=dn_x, y=dn_y, mode='lines', name='종가',
+        line=dict(color='#2962FF', width=1.5), legendgroup='종가',
+        showlegend=False,
+        hovertemplate='%{x|%Y-%m-%d}<br>종가: %{y:,.0f}원<extra></extra>',
     ), row=1, col=1)
 
     # 60일 이동평균선
