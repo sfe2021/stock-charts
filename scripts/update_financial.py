@@ -363,7 +363,7 @@ def build_html(results, col_labels, items, market_cap_eok=None):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   * {{ margin: 0; padding: 0; box-sizing: border-box; }}
-  body {{ font-family: -apple-system, 'Malgun Gothic', sans-serif; background: #fff; }}
+  body {{ font-family: -apple-system, 'Malgun Gothic', sans-serif; background: #fff; overflow: hidden; }}
   table {{ font-size: 13px; }}
   td {{ padding: 4px 8px; border: 1px solid #ddd; }}
   tr:nth-child(even) {{ background-color: #f9f9f9; }}
@@ -373,13 +373,6 @@ def build_html(results, col_labels, items, market_cap_eok=None):
 </head>
 <body>
 {table}
-<script>
-function sendHeight() {{
-    window.parent.postMessage({{type:'iframe-height', height: document.body.scrollHeight}}, '*');
-}}
-window.addEventListener('load', sendHeight);
-new MutationObserver(sendHeight).observe(document.body, {{childList:true, subtree:true}});
-</script>
 </body>
 </html>'''
     return html

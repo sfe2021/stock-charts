@@ -193,8 +193,13 @@ def generate_chart(stock_info):
 
     # HTML 저장 (CDN)
     out_path = os.path.join(BASE, filename)
+    iframe_height_js = """<script>
+function sendHeight() { window.parent.postMessage({type:'iframe-height', height: document.body.scrollHeight}, '*'); }
+window.addEventListener('load', sendHeight);
+window.addEventListener('resize', sendHeight);
+</script>"""
     html = fig.to_html(include_plotlyjs='cdn', full_html=True, config=chart_config)
-    html = html.replace('</body>', autofit_js + '</body>')
+    html = html.replace('</body>', autofit_js + iframe_height_js + '</body>')
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write(html)
 
