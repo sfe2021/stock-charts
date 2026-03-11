@@ -120,7 +120,7 @@ def process_financial(acnt, acnt_all, div_data, stock_data, capital):
                 r['순이익_비지배'] = amt
 
         if '재무상태표' in sj:
-            if '지배기업' in acct and ('귀속' in acct or '소유주' in acct):
+            if '지배기업' in acct and ('귀속' in acct or '소유' in acct):
                 r['자본_지배'] = amt
             elif acct == '비지배지분':
                 r['자본_비지배'] = amt
