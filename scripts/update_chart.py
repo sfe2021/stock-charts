@@ -91,7 +91,7 @@ autofit_js = """
 """
 
 chart_config = {
-    'displayModeBar': False,
+    'displayModeBar': True,
     'displaylogo': False,
     'locale': 'ko',
     'scrollZoom': False,
@@ -167,11 +167,7 @@ def generate_chart(stock_info):
         hovermode='x unified',
         margin=dict(l=10, r=10, t=105, b=30),
         dragmode='pan',
-        xaxis=dict(
-            type='date', rangeslider=dict(visible=False),
-            minallowed=df.index[0].isoformat(),
-            maxallowed=df.index[-1].isoformat(),
-        ),
+        xaxis=dict(type='date', rangeslider=dict(visible=False)),
         yaxis=dict(tickformat=',', side='right', fixedrange=True, automargin=True),
     )
 
@@ -191,9 +187,9 @@ def generate_chart(stock_info):
         ),
     )
 
-    # HTML 저장 (CDN)
+    # HTML 저장 (Plotly 내장 - 티스토리 iframe 호환)
     out_path = os.path.join(BASE, filename)
-    html = fig.to_html(include_plotlyjs='cdn', full_html=True, config=chart_config)
+    html = fig.to_html(include_plotlyjs=True, full_html=True, config=chart_config)
     html = html.replace('</body>', autofit_js + '</body>')
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write(html)

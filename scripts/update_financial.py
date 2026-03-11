@@ -114,9 +114,9 @@ def process_financial(acnt, acnt_all, div_data, stock_data, capital):
         amt = int(amt_s.replace(',', ''))
 
         if '포괄손익' in sj:
-            if '지배기업' in acct and '당기순이익' in acct:
+            if '지배기업' in acct and ('당기순이익' in acct or '소유주지분' in acct):
                 r['순이익_지배'] = amt
-            elif '비지배지분' in acct and '당기순이익' in acct:
+            elif '비지배지분' in acct and ('당기순이익' in acct or acct.strip() == '비지배지분'):
                 r['순이익_비지배'] = amt
 
         if '재무상태표' in sj:
