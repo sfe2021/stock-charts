@@ -316,16 +316,26 @@ QUARTER_ITEMS = [
 ]
 
 
-def build_html(results, col_labels, items):
+def build_html(results, col_labels, items, market_cap_eok=None):
     """완전한 HTML 문서 생성 (iframe용)"""
+    col_w = 74.4186 / len(col_labels)
     table = '<table style="background-color: #ffffff; color: #3c3c3c; text-align: left; border-collapse: collapse; width: 100%;" border="1" data-ke-align="alignLeft" data-ke-style="style12">\n<tbody>\n'
 
     # Header
     table += '<tr>\n'
-    table += '<td style="text-align: right; width: 25.5814%;">주요 재무 정보</td>\n'
+    table += '<td style="text-align: right; width: 25.5814%; color: #ffffff;">주요 재무 정보</td>\n'
     for label in col_labels:
-        table += f'<td style="text-align: right; width: {74.4186/len(col_labels):.4f}%;"><span style="color: #ffffff;">{label}</span></td>\n'
+        table += f'<td style="text-align: right; width: {col_w:.4f}%;"><span style="color: #ffffff;">{label}</span></td>\n'
     table += '</tr>\n'
+
+    # 시가총액 행
+    if market_cap_eok is not None:
+        table += '<tr>\n'
+        table += '<td style="text-align: right; width: 25.5814%;"><span style="color: #000000;">시가총액(억원)</span></td>\n'
+        cap_str = f'{market_cap_eok:,}'
+        # 전체 열 병합
+        table += f'<td style="text-align: right; width: {col_w * len(col_labels):.4f}%;" colspan="{len(col_labels)}"><span style="color: #000000;"><b>{cap_str}</b></span></td>\n'
+        table += '</tr>\n'
 
     # Data rows
     for row_label, formatter in items:
@@ -348,8 +358,8 @@ def build_html(results, col_labels, items):
   body {{ font-family: -apple-system, 'Malgun Gothic', sans-serif; background: #fff; }}
   table {{ font-size: 13px; }}
   td {{ padding: 4px 8px; border: 1px solid #ddd; }}
-  tr:first-child {{ background-color: #2962FF; }}
-  tr:first-child td {{ font-weight: bold; }}
+  tr:first-child {{ background-color: #4a4a4a; }}
+  tr:first-child td {{ font-weight: bold; color: #ffffff; }}
   tr:nth-child(even) {{ background-color: #f9f9f9; }}
 </style>
 </head>
@@ -404,9 +414,23 @@ def update_stock(stock_info, force=False):
     for y, r in annual_results.items():
         calc_per_pbr(r, prices.get(y))
 
+    # 실시간 시가총액 (현재가 x 발행주식수)
+    market_cap_eok = None
+    try:
+        stock = yf.Ticker(stock_info['ticker'])
+        cur_price = stock.history(period='1d')['Close'].iloc[-1]
+        # 최신 연도의 발행주식수 사용
+        latest_year = max(annual_results.keys())
+        shares = annual_results[latest_year].get('발행주식수')
+        if cur_price and shares:
+            market_cap_eok = round(cur_price * shares / 100000000)
+            print(f'[{name}] Market cap: {market_cap_eok:,} 억원')
+    except Exception as e:
+        print(f'[{name}] Market cap error: {e}')
+
     # 연간 HTML 생성
     col_labels = [f'{y}/12' for y in annual_results.keys()]
-    annual_html = build_html(annual_results, col_labels, ANNUAL_ITEMS)
+    annual_html = build_html(annual_results, col_labels, ANNUAL_ITEMS, market_cap_eok)
     annual_path = os.path.join(BASE, stock_info['annual_file'])
     with open(annual_path, 'w', encoding='utf-8') as f:
         f.write(annual_html)
@@ -448,7 +472,7 @@ def update_stock(stock_info, force=False):
             quarter_results[key] = r
 
         col_labels_q = list(quarter_results.keys())
-        quarter_html = build_html(quarter_results, col_labels_q, QUARTER_ITEMS)
+        quarter_html = build_html(quarter_results, col_labels_q, QUARTER_ITEMS, market_cap_eok)
         quarter_path = os.path.join(BASE, stock_info['quarter_file'])
         with open(quarter_path, 'w', encoding='utf-8') as f:
             f.write(quarter_html)
