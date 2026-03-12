@@ -120,6 +120,23 @@ autofit_js = """
     });
 
     setTimeout(autofit, 500);
+
+    // === Clear Lines 버튼 추가 ===
+    function addClearBtn() {
+        var modeBar = document.querySelector('.modebar-group');
+        if (!modeBar) { setTimeout(addClearBtn, 300); return; }
+        var btn = document.createElement('a');
+        btn.className = 'modebar-btn';
+        btn.setAttribute('data-title', 'Clear lines');
+        btn.setAttribute('data-toggle', 'false');
+        btn.style.cursor = 'pointer';
+        btn.innerHTML = '<svg viewBox="0 0 1000 1000" height="1em" width="1em"><path d="M742 167L500 408 258 167 167 258 408 500 167 742 258 833 500 592 742 833 833 742 592 500 833 258z" fill="currentColor"/></svg>';
+        btn.addEventListener('click', function() {
+            Plotly.relayout(gd, {shapes: []});
+        });
+        modeBar.appendChild(btn);
+    }
+    setTimeout(addClearBtn, 600);
 })();
 </script>
 """
@@ -128,8 +145,7 @@ chart_config = {
     'displayModeBar': True,
     'displaylogo': False,
     'scrollZoom': False,
-    'editable': True,
-    'modeBarButtonsToAdd': ['drawline', 'eraseshape'],
+    'modeBarButtonsToAdd': ['drawline'],
     'modeBarButtonsToRemove': [
         'toImage', 'zoom2d', 'select2d', 'lasso2d',
         'autoScale2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d',
@@ -212,7 +228,6 @@ def generate_chart(stock_info):
         margin=dict(l=10, r=10, t=105, b=30),
         dragmode='pan',
         newshape=dict(line=dict(color='#000000', width=2)),
-        activeshape=dict(fillcolor='rgba(0,0,255,0.1)', opacity=0.8),
         xaxis2=dict(type='date'),
         xaxis=dict(type='date', rangeslider=dict(visible=False)),
         yaxis=dict(tickformat=',', hoverformat=',.0f', side='right', fixedrange=True, automargin=True),
