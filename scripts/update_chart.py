@@ -157,10 +157,6 @@ def generate_chart(stock_info):
 
     df[f'MA{MA_DAYS}'] = df_daily[f'MA{MA_DAYS}'].resample('W').last()
 
-    # 거래량 색상 계산 (상승=빨강, 하락=파랑)
-    vol_colors = ['#EF5350' if c >= o else '#2962FF'
-                  for c, o in zip(df['Close'], df['Open'])]
-
     # 차트 생성 (서브플롯: 주가 75% + 거래량 25%)
     from plotly.subplots import make_subplots
     fig = make_subplots(
@@ -189,12 +185,14 @@ def generate_chart(stock_info):
         hovertemplate='60일선: %{y:,.0f}원<extra></extra>'
     ), row=1, col=1)
 
-    # 거래량 바 차트
-    fig.add_trace(go.Bar(
+    # 거래량 면적 차트 (모바일에서도 항상 보이도록 bar→area 변경)
+    fig.add_trace(go.Scatter(
         x=df.index, y=df['Volume'],
         name='거래량',
-        marker_color=vol_colors,
-        opacity=0.7,
+        mode='lines',
+        fill='tozeroy',
+        line=dict(color='#7986CB', width=0.5),
+        fillcolor='rgba(121,134,203,0.4)',
         hovertemplate='거래량: %{y:,.0f}<extra></extra>'
     ), row=2, col=1)
 
@@ -212,7 +210,6 @@ def generate_chart(stock_info):
         xaxis=dict(type='date', rangeslider=dict(visible=False)),
         yaxis=dict(tickformat=',', hoverformat=',.0f', side='right', fixedrange=True, automargin=True),
         yaxis2=dict(showticklabels=False, fixedrange=True),
-        bargap=0.05,
     )
 
     # 기간 선택 버튼
