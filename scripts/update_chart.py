@@ -127,13 +127,13 @@ autofit_js = """
 chart_config = {
     'displayModeBar': True,
     'displaylogo': False,
-    'locale': 'ko',
     'scrollZoom': False,
     'modeBarButtonsToAdd': ['drawline', 'eraseshape'],
     'modeBarButtonsToRemove': [
         'toImage', 'zoom2d', 'select2d', 'lasso2d',
         'autoScale2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d',
     ],
+    'edits': {'shapePosition': True},
 }
 
 
@@ -211,7 +211,7 @@ def generate_chart(stock_info):
         hovermode='x unified',
         margin=dict(l=10, r=10, t=105, b=30),
         dragmode='pan',
-        newshape=dict(line=dict(color='#FF0000', width=2)),
+        newshape=dict(line=dict(color='#000000', width=2)),
         xaxis2=dict(type='date'),
         xaxis=dict(type='date', rangeslider=dict(visible=False)),
         yaxis=dict(tickformat=',', hoverformat=',.0f', side='right', fixedrange=True, automargin=True),
