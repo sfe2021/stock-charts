@@ -62,12 +62,14 @@ autofit_js = """
             update['xaxis.range'] = [new Date(xMin).toISOString(), new Date(xMax).toISOString()];
         }
 
-        // y축 최적화 (_fullData + TypedArray(Float64Array) 지원)
+        // y축 최적화 (주가 영역만 - 거래량 서브플롯 제외)
         var yMin = Infinity, yMax = -Infinity;
         var traces = gd._fullData;
         for (var t = 0; t < traces.length; t++) {
             var tr = traces[t];
             if (!hasLen(tr.x)) continue;
+            // 거래량(yaxis2) 트레이스는 주가 y축 계산에서 제외
+            if (tr.yaxis === 'y2' || tr.type === 'bar') continue;
             if (tr.type === 'candlestick' || tr.type === 'ohlc') {
                 var high = tr.high, low = tr.low;
                 if (!hasLen(high) || !hasLen(low)) continue;
@@ -155,8 +157,17 @@ def generate_chart(stock_info):
 
     df[f'MA{MA_DAYS}'] = df_daily[f'MA{MA_DAYS}'].resample('W').last()
 
-    # 차트 생성
-    fig = go.Figure()
+    # 거래량 색상 계산 (상승=빨강, 하락=파랑)
+    vol_colors = ['#EF5350' if c >= o else '#2962FF'
+                  for c, o in zip(df['Close'], df['Open'])]
+
+    # 차트 생성 (서브플롯: 주가 75% + 거래량 25%)
+    from plotly.subplots import make_subplots
+    fig = make_subplots(
+        rows=2, cols=1, shared_xaxes=True,
+        vertical_spacing=0.02,
+        row_heights=[0.75, 0.25],
+    )
 
     # 캔들스틱(봉) 차트 - 상승=빨강, 하락=파랑
     fig.add_trace(go.Candlestick(
@@ -168,7 +179,7 @@ def generate_chart(stock_info):
         name='주봉',
         increasing=dict(line=dict(color='#EF5350'), fillcolor='#EF5350'),
         decreasing=dict(line=dict(color='#2962FF'), fillcolor='#2962FF'),
-    ))
+    ), row=1, col=1)
 
     # 60일 이동평균선
     ma_data = df[f'MA{MA_DAYS}'].dropna()
@@ -176,20 +187,32 @@ def generate_chart(stock_info):
         x=ma_data.index, y=ma_data, mode='lines', name='60일선',
         line=dict(color=MA_COLOR, width=1.2),
         hovertemplate='60일선: %{y:,.0f}원<extra></extra>'
-    ))
+    ), row=1, col=1)
+
+    # 거래량 바 차트
+    fig.add_trace(go.Bar(
+        x=df.index, y=df['Volume'],
+        name='거래량',
+        marker_color=vol_colors,
+        opacity=0.7,
+        hovertemplate='거래량: %{y:,.0f}<extra></extra>'
+    ), row=2, col=1)
 
     # 레이아웃
     fig.update_layout(
         title=dict(text=f'{name} ({code}) 주가 차트 (주봉)',
                    font=dict(size=18, color='#333333'), x=0.5, y=0.97),
-        template='plotly_white', height=750, showlegend=True,
+        template='plotly_white', height=500, showlegend=True,
         legend=dict(orientation='h', yanchor='top', y=1.025,
                     xanchor='right', x=1.0, font=dict(size=10)),
         hovermode='x unified',
         margin=dict(l=10, r=10, t=105, b=30),
         dragmode='pan',
+        xaxis2=dict(type='date'),
         xaxis=dict(type='date', rangeslider=dict(visible=False)),
         yaxis=dict(tickformat=',', hoverformat=',.0f', side='right', fixedrange=True, automargin=True),
+        yaxis2=dict(showticklabels=False, fixedrange=True),
+        bargap=0.3,
     )
 
     # 기간 선택 버튼
