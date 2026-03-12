@@ -125,7 +125,7 @@ autofit_js = """
 """
 
 chart_config = {
-    'displayModeBar': True,
+    'displayModeBar': False,
     'displaylogo': False,
     'locale': 'ko',
     'scrollZoom': False,
