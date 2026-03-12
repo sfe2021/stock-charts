@@ -128,12 +128,12 @@ chart_config = {
     'displayModeBar': True,
     'displaylogo': False,
     'scrollZoom': False,
+    'editable': True,
     'modeBarButtonsToAdd': ['drawline', 'eraseshape'],
     'modeBarButtonsToRemove': [
         'toImage', 'zoom2d', 'select2d', 'lasso2d',
         'autoScale2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d',
     ],
-    'edits': {'shapePosition': True},
 }
 
 
@@ -212,6 +212,7 @@ def generate_chart(stock_info):
         margin=dict(l=10, r=10, t=105, b=30),
         dragmode='pan',
         newshape=dict(line=dict(color='#000000', width=2)),
+        activeshape=dict(fillcolor='rgba(0,0,255,0.1)', opacity=0.8),
         xaxis2=dict(type='date'),
         xaxis=dict(type='date', rangeslider=dict(visible=False)),
         yaxis=dict(tickformat=',', hoverformat=',.0f', side='right', fixedrange=True, automargin=True),
