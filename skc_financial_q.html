@@ -6,19 +6,21 @@
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: -apple-system, 'Malgun Gothic', sans-serif; background: #fff; }
-  table { font-size: 13px; }
-  td { padding: 4px 8px; border: 1px solid #ddd; }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { font-size: 13px; word-break: keep-all; overflow-wrap: normal; }
+  td { padding: 4px 8px; border: 1px solid #ddd; white-space: nowrap; }
   tr:nth-child(even) { background-color: #f9f9f9; }
   tr:nth-child(-n+2) { background-color: #4a4a4a; }
   tr:nth-child(-n+2) td { font-weight: bold; color: #ffffff; }
 </style>
 </head>
 <body>
-<table style="background-color: #ffffff; color: #3c3c3c; text-align: left; border-collapse: collapse; width: 100%;" border="1" data-ke-align="alignLeft" data-ke-style="style12">
+<div class="table-wrap">
+<table style="background-color: #ffffff; color: #3c3c3c; text-align: left; border-collapse: collapse; width: 100%; word-break: keep-all; overflow-wrap: normal;" border="1" data-ke-align="alignLeft" data-ke-style="style12">
 <tbody>
 <tr style="background-color: #4a4a4a;">
 <td style="text-align: right; width: 25.5814%; font-weight: bold; color: #ffffff;"><span style="color: #ffffff;">시가총액(억원)</span></td>
-<td style="text-align: right; width: 74.4186%; font-weight: bold; color: #ffffff;" colspan="5"><span style="color: #ffffff;"><b>38,853</b></span></td>
+<td style="text-align: right; width: 74.4186%; font-weight: bold; color: #ffffff;" colspan="5"><span style="color: #ffffff;"><b>38,096</b></span></td>
 </tr>
 <tr style="background-color: #4a4a4a;">
 <td style="text-align: right; width: 25.5814%; font-weight: bold; color: #ffffff;"><span style="color: #ffffff;">주요 재무 정보</span></td>
@@ -182,5 +184,6 @@
 </tr>
 </tbody>
 </table>
+</div>
 </body>
 </html>

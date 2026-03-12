@@ -340,7 +340,7 @@ QUARTER_ITEMS = [
 def build_html(results, col_labels, items, market_cap_eok=None):
     """완전한 HTML 문서 생성 (iframe용)"""
     col_w = 74.4186 / len(col_labels)
-    table = '<table style="background-color: #ffffff; color: #3c3c3c; text-align: left; border-collapse: collapse; width: 100%;" border="1" data-ke-align="alignLeft" data-ke-style="style12">\n<tbody>\n'
+    table = '<table style="background-color: #ffffff; color: #3c3c3c; text-align: left; border-collapse: collapse; width: 100%; word-break: keep-all; overflow-wrap: normal;" border="1" data-ke-align="alignLeft" data-ke-style="style12">\n<tbody>\n'
 
     hdr_tr = 'style="background-color: #4a4a4a;"'
     hdr_td = 'font-weight: bold; color: #ffffff;'
@@ -390,15 +390,18 @@ def build_html(results, col_labels, items, market_cap_eok=None):
 <style>
   * {{ margin: 0; padding: 0; box-sizing: border-box; }}
   body {{ font-family: -apple-system, 'Malgun Gothic', sans-serif; background: #fff; }}
-  table {{ font-size: 13px; }}
-  td {{ padding: 4px 8px; border: 1px solid #ddd; }}
+  .table-wrap {{ overflow-x: auto; -webkit-overflow-scrolling: touch; }}
+  table {{ font-size: 13px; word-break: keep-all; overflow-wrap: normal; }}
+  td {{ padding: 4px 8px; border: 1px solid #ddd; white-space: nowrap; }}
   tr:nth-child(even) {{ background-color: #f9f9f9; }}
   {header_css} {{ background-color: #4a4a4a; }}
   {header_css} td {{ font-weight: bold; color: #ffffff; }}
 </style>
 </head>
 <body>
+<div class="table-wrap">
 {table}
+</div>
 </body>
 </html>'''
     return html

@@ -212,7 +212,7 @@ def generate_chart(stock_info):
         xaxis=dict(type='date', rangeslider=dict(visible=False)),
         yaxis=dict(tickformat=',', hoverformat=',.0f', side='right', fixedrange=True, automargin=True),
         yaxis2=dict(showticklabels=False, fixedrange=True),
-        bargap=0.3,
+        bargap=0.05,
     )
 
     # 기간 선택 버튼
