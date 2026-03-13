@@ -10,6 +10,14 @@ STOCKS = [
     {"ticker": "043150.KQ", "name": "바텍", "code": "043150", "filename": "vatech.html"},
     {"ticker": "011790.KS", "name": "SKC", "code": "011790", "filename": "skc.html"},
     {"ticker": "030520.KQ", "name": "한글과컴퓨터", "code": "030520", "filename": "hancom.html"},
+    {"ticker": "009150.KS", "name": "삼성전기", "code": "009150", "filename": "samsungelectro.html"},
+    {"ticker": "161580.KQ", "name": "필옵틱스", "code": "161580", "filename": "philoptics.html"},
+    {"ticker": "394280.KQ", "name": "오픈엣지테크놀로지", "code": "394280", "filename": "openedge.html"},
+    {"ticker": "047560.KQ", "name": "이스트소프트", "code": "047560", "filename": "eastsoft.html"},
+    {"ticker": "087600.KQ", "name": "픽셀플러스", "code": "087600", "filename": "pixelplus.html"},
+    {"ticker": "432720.KQ", "name": "퀄리타스반도체", "code": "432720", "filename": "qualitas.html"},
+    {"ticker": "007660.KS", "name": "이수페타시스", "code": "007660", "filename": "isupetasys.html"},
+    {"ticker": "353200.KS", "name": "대덕전자", "code": "353200", "filename": "daeduck.html"},
 ]
 
 MA_DAYS = 60
