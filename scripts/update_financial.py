@@ -149,11 +149,20 @@ def check_new_reports(corp_code):
 
 
 def fetch_year_data(corp_code, year, reprt_code):
-    """한 보고서의 재무 데이터 전체 조회"""
+    """한 보고서의 재무 데이터 전체 조회 (CFS 우선, 없으면 OFS fallback)"""
     base_params = {'corp_code': corp_code, 'bsns_year': str(year), 'reprt_code': reprt_code}
 
+    # CFS(연결) 먼저 시도
     acnt = dart_get('fnlttSinglAcnt.json', {**base_params, 'fs_div': 'CFS'})
     acnt_all = dart_get('fnlttSinglAcntAll.json', {**base_params, 'fs_div': 'CFS'})
+
+    # CFS 데이터가 없으면 OFS(별도)로 fallback
+    has_cfs = any(item.get('fs_div') == 'CFS' for item in acnt) if acnt else False
+    if not has_cfs:
+        print(f"    CFS 없음 → OFS fallback ({year}, {reprt_code})")
+        acnt = dart_get('fnlttSinglAcnt.json', {**base_params, 'fs_div': 'OFS'})
+        acnt_all = dart_get('fnlttSinglAcntAll.json', {**base_params, 'fs_div': 'OFS'})
+
     div_data = dart_get('alotMatter.json', base_params)
     stock_data = dart_get('stockTotqySttus.json', base_params)
 
@@ -171,8 +180,12 @@ def process_financial(acnt, acnt_all, div_data, stock_data, capital):
     r = {}
 
     # --- fnlttSinglAcnt (주요계정) ---
+    # CFS 또는 OFS 중 실제 데이터가 있는 것을 사용 (fetch에서 이미 결정됨)
+    target_fs = 'CFS'
+    if acnt and not any(item.get('fs_div') == 'CFS' for item in acnt):
+        target_fs = 'OFS'
     for item in acnt:
-        if item.get('fs_div') != 'CFS':
+        if item.get('fs_div') != target_fs:
             continue
         acct = item.get('account_nm', '')
         val = item.get('thstrm_amount', '')
@@ -613,6 +626,16 @@ if __name__ == '__main__':
             sys.exit(1)
 
     force = '--force' in sys.argv
+    # --only 필터: 특정 종목만 실행 (예: --only pixelplus,qualitas)
+    only_filter = None
+    for arg in sys.argv:
+        if arg.startswith('--only='):
+            only_filter = [x.strip() for x in arg.split('=')[1].split(',')]
     for s in STOCKS:
+        if only_filter:
+            # annual_file에서 회사 키 추출하여 필터
+            key = s['annual_file'].replace('_financial.html', '')
+            if key not in only_filter:
+                continue
         update_stock(s, force=force)
     print('Done.')
