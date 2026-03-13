@@ -18,6 +18,14 @@ STOCKS = [
     {"ticker": "432720.KQ", "name": "퀄리타스반도체", "code": "432720", "filename": "qualitas.html"},
     {"ticker": "007660.KS", "name": "이수페타시스", "code": "007660", "filename": "isupetasys.html"},
     {"ticker": "353200.KS", "name": "대덕전자", "code": "353200", "filename": "daeduck.html"},
+    {"ticker": "099320.KQ", "name": "쎄트렉아이", "code": "099320", "filename": "satrec.html"},
+    {"ticker": "189300.KQ", "name": "인텔리안테크", "code": "189300", "filename": "intellian.html"},
+    {"ticker": "211270.KQ", "name": "AP위성", "code": "211270", "filename": "apsatellite.html"},
+    {"ticker": "361390.KQ", "name": "제노코", "code": "361390", "filename": "genco.html"},
+    {"ticker": "274090.KQ", "name": "켄코아에어로스페이스", "code": "274090", "filename": "kencoa.html"},
+    {"ticker": "462350.KQ", "name": "이노스페이스", "code": "462350", "filename": "innospace.html"},
+    {"ticker": "042370.KQ", "name": "비츠로테크", "code": "042370", "filename": "vitzrotech.html"},
+    {"ticker": "474170.KQ", "name": "루미르", "code": "474170", "filename": "lumir.html"},
 ]
 
 MA_DAYS = 60
