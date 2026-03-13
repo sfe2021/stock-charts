@@ -181,6 +181,10 @@ def process_financial(acnt, acnt_all, div_data, stock_data, capital):
         v = int(val.replace(',', ''))
         if '매출액' in acct:
             r['매출액'] = v
+        elif acct == '영업수익' or acct == '수익(매출액)' or acct == '수익':
+            # 일부 기업은 "매출액" 대신 "영업수익" 또는 "수익" 사용
+            if '매출액' not in r:
+                r['매출액'] = v
         elif '영업이익' in acct and '매출' not in acct:
             r['영업이익'] = v
         elif '법인세차감전' in acct:
@@ -202,6 +206,11 @@ def process_financial(acnt, acnt_all, div_data, stock_data, capital):
         if not amt_s or amt_s.strip() in ['-', '']:
             continue
         amt = int(amt_s.replace(',', ''))
+
+        # 영업수익/수익을 매출로 처리 (매출액이 주요계정에 없는 경우)
+        if ('손익' in sj or '포괄' in sj) and acct in ('영업수익', '수익', '수익(매출액)'):
+            if '매출액' not in r:
+                r['매출액'] = amt
 
         if '포괄손익' in sj:
             if '지배기업' in acct or '지배주주' in acct:
