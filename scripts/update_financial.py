@@ -185,6 +185,78 @@ STOCKS = [
         'annual_file': 'lumir_financial.html',
         'quarter_file': 'lumir_financial_q.html',
     },
+    {
+        'name': 'RFHIC',
+        'code': '218410',
+        'corp_code': '01078178',
+        'ticker': '218410.KQ',
+        'capital': 13393217000,
+        'annual_file': 'rfhic_financial.html',
+        'quarter_file': 'rfhic_financial_q.html',
+    },
+    {
+        'name': '기가레인',
+        'code': '049080',
+        'corp_code': '00377018',
+        'ticker': '049080.KQ',
+        'capital': 42441673500,
+        'annual_file': 'gigalane_financial.html',
+        'quarter_file': 'gigalane_financial_q.html',
+    },
+    {
+        'name': '케이엠더블유',
+        'code': '032500',
+        'corp_code': '00226352',
+        'ticker': '032500.KQ',
+        'capital': 19910441500,
+        'annual_file': 'kmw_financial.html',
+        'quarter_file': 'kmw_financial_q.html',
+    },
+    {
+        'name': '서진시스템',
+        'code': '178320',
+        'corp_code': '00838005',
+        'ticker': '178320.KQ',
+        'capital': 28123977000,
+        'annual_file': 'seojin_financial.html',
+        'quarter_file': 'seojin_financial_q.html',
+    },
+    {
+        'name': '쏠리드',
+        'code': '050890',
+        'corp_code': '00364403',
+        'ticker': '050890.KQ',
+        'capital': 30610820000,
+        'annual_file': 'solid_financial.html',
+        'quarter_file': 'solid_financial_q.html',
+    },
+    {
+        'name': '오이솔루션',
+        'code': '138080',
+        'corp_code': '00571483',
+        'ticker': '138080.KQ',
+        'capital': 5312047500,
+        'annual_file': 'oisolution_financial.html',
+        'quarter_file': 'oisolution_financial_q.html',
+    },
+    {
+        'name': '우진',
+        'code': '105840',
+        'corp_code': '00173944',
+        'ticker': '105840.KQ',
+        'capital': 10161807000,
+        'annual_file': 'woojin_financial.html',
+        'quarter_file': 'woojin_financial_q.html',
+    },
+    {
+        'name': '비에이치아이',
+        'code': '083650',
+        'corp_code': '00409788',
+        'ticker': '083650.KQ',
+        'capital': 15472187500,
+        'annual_file': 'bhi_financial.html',
+        'quarter_file': 'bhi_financial_q.html',
+    },
 ]
 
 # ===== DART API 헬퍼 =====
@@ -375,8 +447,11 @@ def process_financial(acnt, acnt_all, div_data, stock_data, capital):
         r['영업이익률'] = r.get('영업이익', 0) / r['매출액'] * 100
         r['순이익률'] = r.get('당기순이익', 0) / r['매출액'] * 100
 
+    # ROE: 지배주주 자본 우선, 없으면 자본총계로 fallback (OFS 기업)
     if r.get('자본_지배') and r['자본_지배'] != 0:
         r['ROE'] = r.get('순이익_지배', 0) / r['자본_지배'] * 100
+    elif r.get('자본총계') and r['자본총계'] != 0 and not r.get('자본_지배'):
+        r['ROE'] = r.get('당기순이익', 0) / r['자본총계'] * 100
 
     if r.get('자산총계') and r['자산총계'] != 0:
         r['ROA'] = r.get('당기순이익', 0) / r['자산총계'] * 100
@@ -384,14 +459,20 @@ def process_financial(acnt, acnt_all, div_data, stock_data, capital):
     if r.get('자본총계') and r['자본총계'] != 0:
         r['부채비율'] = r.get('부채총계', 0) / r['자본총계'] * 100
 
+    # 자본유보율: 지배주주 자본 우선, 없으면 자본총계로 fallback (OFS 기업)
     if capital and capital != 0:
-        r['자본유보율'] = (r.get('자본_지배', 0) - capital) / capital * 100
+        equity_for_reserve = r.get('자본_지배') or r.get('자본총계', 0)
+        r['자본유보율'] = (equity_for_reserve - capital) / capital * 100
 
     if r.get('발행주식수') and r['발행주식수'] != 0:
-        if r.get('순이익_지배'):
-            r['EPS'] = round(r['순이익_지배'] / r['발행주식수'])
-        if r.get('자본_지배'):
-            r['BPS'] = round(r['자본_지배'] / r['발행주식수'])
+        # EPS: 지배주주 순이익 우선, 없으면 당기순이익으로 fallback (OFS 기업)
+        ni = r.get('순이익_지배') or r.get('당기순이익')
+        if ni:
+            r['EPS'] = round(ni / r['발행주식수'])
+        # BPS: 지배주주 자본 우선, 없으면 자본총계로 fallback (OFS 기업)
+        eq = r.get('자본_지배') or r.get('자본총계')
+        if eq:
+            r['BPS'] = round(eq / r['발행주식수'])
 
     return r
 

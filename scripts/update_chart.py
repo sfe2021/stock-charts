@@ -26,6 +26,14 @@ STOCKS = [
     {"ticker": "462350.KQ", "name": "이노스페이스", "code": "462350", "filename": "innospace.html"},
     {"ticker": "042370.KQ", "name": "비츠로테크", "code": "042370", "filename": "vitzrotech.html"},
     {"ticker": "474170.KQ", "name": "루미르", "code": "474170", "filename": "lumir.html"},
+    {"ticker": "218410.KQ", "name": "RFHIC", "code": "218410", "filename": "rfhic.html"},
+    {"ticker": "049080.KQ", "name": "기가레인", "code": "049080", "filename": "gigalane.html"},
+    {"ticker": "032500.KQ", "name": "케이엠더블유", "code": "032500", "filename": "kmw.html"},
+    {"ticker": "178320.KQ", "name": "서진시스템", "code": "178320", "filename": "seojin.html"},
+    {"ticker": "050890.KQ", "name": "쏠리드", "code": "050890", "filename": "solid.html"},
+    {"ticker": "138080.KQ", "name": "오이솔루션", "code": "138080", "filename": "oisolution.html"},
+    {"ticker": "105840.KQ", "name": "우진", "code": "105840", "filename": "woojin.html"},
+    {"ticker": "083650.KQ", "name": "비에이치아이", "code": "083650", "filename": "bhi.html"},
 ]
 
 MA_DAYS = 60
