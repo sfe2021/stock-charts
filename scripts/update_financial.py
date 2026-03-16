@@ -338,6 +338,105 @@ STOCKS = [
         'annual_file': 'genome_financial.html',
         'quarter_file': 'genome_financial_q.html',
     },
+    {
+        'name': '넥스트칩',
+        'code': '396270',
+        'corp_code': '01515864',
+        'ticker': '396270.KQ',
+        'capital': 9044470000,
+        'annual_file': 'nextchip_financial.html',
+        'quarter_file': 'nextchip_financial_q.html',
+    },
+    {
+        'name': '대동',
+        'code': '000490',
+        'corp_code': '00109286',
+        'ticker': '000490.KS',
+        'capital': 25640788000,
+        'annual_file': 'daedong_financial.html',
+        'quarter_file': 'daedong_financial_q.html',
+    },
+    {
+        'name': '텔레칩스',
+        'code': '054450',
+        'corp_code': '00423177',
+        'ticker': '054450.KQ',
+        'capital': 7572116500,
+        'annual_file': 'telechips_financial.html',
+        'quarter_file': 'telechips_financial_q.html',
+    },
+    {
+        'name': '로보티즈',
+        'code': '108490',
+        'corp_code': '00946030',
+        'ticker': '108490.KQ',
+        'capital': 5765498000,
+        'annual_file': 'robotis_financial.html',
+        'quarter_file': 'robotis_financial_q.html',
+    },
+    {
+        'name': 'LS티라유텍',
+        'code': '322180',
+        'corp_code': '01309388',
+        'ticker': '322180.KQ',
+        'capital': 2093925400,
+        'annual_file': 'tirautech_financial.html',
+        'quarter_file': 'tirautech_financial_q.html',
+    },
+    {
+        'name': '레인보우로보틱스',
+        'code': '277810',
+        'corp_code': '01261644',
+        'ticker': '277810.KQ',
+        'capital': 9699929000,
+        'annual_file': 'rainbow_financial.html',
+        'quarter_file': 'rainbow_financial_q.html',
+    },
+    {
+        'name': '티로보틱스',
+        'code': '117730',
+        'corp_code': '00867098',
+        'ticker': '117730.KQ',
+        'capital': 9086181000,
+        'annual_file': 'trobotics_financial.html',
+        'quarter_file': 'trobotics_financial_q.html',
+    },
+    {
+        'name': '현대오토에버',
+        'code': '307950',
+        'corp_code': '00362441',
+        'ticker': '307950.KS',
+        'capital': 13711991000,
+        'annual_file': 'autoever_financial.html',
+        'quarter_file': 'autoever_financial_q.html',
+    },
+    {
+        'name': '에스피지',
+        'code': '058610',
+        'corp_code': '00220686',
+        'ticker': '058610.KQ',
+        'capital': 11088680000,
+        'annual_file': 'spg_financial.html',
+        'quarter_file': 'spg_financial_q.html',
+    },
+    {
+        'name': '엠투아이',
+        'code': '347890',
+        'corp_code': '00670766',
+        'ticker': '347890.KQ',
+        'capital': 1691320400,
+        'annual_file': 'm2i_financial.html',
+        'quarter_file': 'm2i_financial_q.html',
+    },
+    {
+        'name': 'SBB테크',
+        'code': '389500',
+        'corp_code': '00567897',
+        'ticker': '389500.KQ',
+        'capital': 35980353631,
+        'annual_file': 'sbbtech_financial.html',
+        'quarter_file': 'sbbtech_financial_q.html',
+    },
 ]
 
 # ===== DART API 헬퍼 =====
@@ -443,7 +542,10 @@ def process_financial(acnt, acnt_all, div_data, stock_data, capital):
         amt_s = item.get('thstrm_amount', '')
         if not amt_s or amt_s.strip() in ['-', '']:
             continue
-        amt = int(amt_s.replace(',', ''))
+        try:
+            amt = int(float(amt_s.replace(',', '')))
+        except (ValueError, TypeError):
+            continue
 
         # 영업수익/수익을 매출로 처리 (매출액이 주요계정에 없는 경우)
         if ('손익' in sj or '포괄' in sj) and acct in ('영업수익', '수익', '수익(매출액)'):

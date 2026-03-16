@@ -43,6 +43,18 @@ STOCKS = [
     {"ticker": "384470.KQ", "name": "코어라인소프트", "code": "384470", "filename": "coreline.html"},
     {"ticker": "170900.KS", "name": "동아에스티", "code": "170900", "filename": "dongast.html"},
     {"ticker": "314130.KQ", "name": "지놈앤컴퍼니", "code": "314130", "filename": "genome.html"},
+    {"ticker": "000490.KS", "name": "대동", "code": "000490", "filename": "daedong.html"},
+    {"ticker": "307950.KS", "name": "현대오토에버", "code": "307950", "filename": "autoever.html"},
+    {"ticker": "396270.KQ", "name": "넥스트칩", "code": "396270", "filename": "nextchip.html"},
+    {"ticker": "058610.KQ", "name": "에스피지", "code": "058610", "filename": "spg.html"},
+    {"ticker": "108490.KQ", "name": "로보티즈", "code": "108490", "filename": "robotis.html"},
+    {"ticker": "347890.KQ", "name": "엠투아이", "code": "347890", "filename": "m2i.html"},
+    {"ticker": "010120.KS", "name": "LS ELECTRIC", "code": "010120", "filename": "lselectric.html"},
+    {"ticker": "117730.KQ", "name": "티로보틱스", "code": "117730", "filename": "trobotics.html"},
+    {"ticker": "277810.KQ", "name": "레인보우로보틱스", "code": "277810", "filename": "rainbow.html"},
+    {"ticker": "054450.KQ", "name": "텔레칩스", "code": "054450", "filename": "telechips.html"},
+    {"ticker": "322180.KQ", "name": "LS티라유텍", "code": "322180", "filename": "tirautech.html"},
+    {"ticker": "389500.KQ", "name": "SBB테크", "code": "389500", "filename": "sbbtech.html"},
 ]
 
 MA_DAYS = 60
