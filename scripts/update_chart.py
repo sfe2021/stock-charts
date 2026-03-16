@@ -34,6 +34,15 @@ STOCKS = [
     {"ticker": "138080.KQ", "name": "오이솔루션", "code": "138080", "filename": "oisolution.html"},
     {"ticker": "105840.KQ", "name": "우진", "code": "105840", "filename": "woojin.html"},
     {"ticker": "083650.KQ", "name": "비에이치아이", "code": "083650", "filename": "bhi.html"},
+    {"ticker": "328130.KQ", "name": "루닛", "code": "328130", "filename": "lunit.html"},
+    {"ticker": "389030.KQ", "name": "지니너스", "code": "389030", "filename": "geninus.html"},
+    {"ticker": "196170.KQ", "name": "알테오젠", "code": "196170", "filename": "alteogen.html"},
+    {"ticker": "298380.KQ", "name": "에이비엘바이오", "code": "298380", "filename": "ablbio.html"},
+    {"ticker": "305090.KQ", "name": "마이크로디지탈", "code": "305090", "filename": "microdigital.html"},
+    {"ticker": "092040.KQ", "name": "아미코젠", "code": "092040", "filename": "amicogen.html"},
+    {"ticker": "384470.KQ", "name": "코어라인소프트", "code": "384470", "filename": "coreline.html"},
+    {"ticker": "170900.KS", "name": "동아에스티", "code": "170900", "filename": "dongast.html"},
+    {"ticker": "314130.KQ", "name": "지놈앤컴퍼니", "code": "314130", "filename": "genome.html"},
 ]
 
 MA_DAYS = 60
