@@ -58,6 +58,9 @@ STOCKS = [
     {"ticker": "VRT", "name": "Vertiv Holdings", "code": "VRT", "filename": "vertiv.html"},
     {"ticker": "FCX", "name": "Freeport-McMoRan", "code": "FCX", "filename": "freeport.html"},
     {"ticker": "TECK", "name": "Teck Resources", "code": "TECK", "filename": "teck.html"},
+    {"ticker": "8035.T", "name": "Tokyo Electron", "code": "8035", "filename": "tokyoelectron.html"},
+    {"ticker": "300750.SZ", "name": "CATL", "code": "300750", "filename": "catl.html"},
+    {"ticker": "0700.HK", "name": "Tencent", "code": "0700", "filename": "tencent.html"},
 ]
 
 MA_DAYS = 60
