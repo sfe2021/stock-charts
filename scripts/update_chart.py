@@ -55,6 +55,9 @@ STOCKS = [
     {"ticker": "054450.KQ", "name": "텔레칩스", "code": "054450", "filename": "telechips.html"},
     {"ticker": "322180.KQ", "name": "LS티라유텍", "code": "322180", "filename": "tirautech.html"},
     {"ticker": "389500.KQ", "name": "SBB테크", "code": "389500", "filename": "sbbtech.html"},
+    {"ticker": "VRT", "name": "Vertiv Holdings", "code": "VRT", "filename": "vertiv.html"},
+    {"ticker": "FCX", "name": "Freeport-McMoRan", "code": "FCX", "filename": "freeport.html"},
+    {"ticker": "TECK", "name": "Teck Resources", "code": "TECK", "filename": "teck.html"},
 ]
 
 MA_DAYS = 60
