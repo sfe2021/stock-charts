@@ -66,6 +66,22 @@ STOCKS = [
 MA_DAYS = 60
 MA_COLOR = '#FF9800'
 
+# 국가/통화 자동 감지
+def get_locale(ticker):
+    """티커 접미사로 국가/통화/언어 결정"""
+    t = ticker.upper()
+    if t.endswith('.KS') or t.endswith('.KQ'):
+        return {'currency': '원', 'price_fmt': '%{y:,.0f}', 'ma': '60일선', 'vol': '거래량', 'weekly': '주봉', 'title_suffix': '주가 차트 (주봉)'}
+    elif t.endswith('.T'):
+        return {'currency': '¥', 'price_fmt': '%{y:,.0f}', 'ma': '60D MA', 'vol': 'Volume', 'weekly': 'Weekly', 'title_suffix': 'Stock Chart (Weekly)'}
+    elif t.endswith('.SZ') or t.endswith('.SS'):
+        return {'currency': 'CNY', 'price_fmt': '%{y:,.2f}', 'ma': '60D MA', 'vol': 'Volume', 'weekly': 'Weekly', 'title_suffix': 'Stock Chart (Weekly)'}
+    elif t.endswith('.HK'):
+        return {'currency': 'HK$', 'price_fmt': '%{y:,.2f}', 'ma': '60D MA', 'vol': 'Volume', 'weekly': 'Weekly', 'title_suffix': 'Stock Chart (Weekly)'}
+    else:
+        # US stocks (no suffix)
+        return {'currency': '$', 'price_fmt': '$%{y:,.2f}', 'ma': '60D MA', 'vol': 'Volume', 'weekly': 'Weekly', 'title_suffix': 'Stock Chart (Weekly)'}
+
 autofit_js = """
 <script>
 (function() {
@@ -209,6 +225,7 @@ def generate_chart(stock_info):
     name = stock_info['name']
     code = stock_info['code']
     filename = stock_info['filename']
+    loc = get_locale(ticker)
 
     print(f"[{name}] Downloading daily data...")
     stock = yf.Ticker(ticker)
@@ -237,6 +254,23 @@ def generate_chart(stock_info):
         row_heights=[0.75, 0.25],
     )
 
+    # 통화별 hover 포맷 결정
+    cur = loc['currency']
+    if cur == '원':
+        ma_hover = f'{loc["ma"]}: %{{y:,.0f}}원<extra></extra>'
+    elif cur == '$':
+        ma_hover = f'{loc["ma"]}: $%{{y:,.2f}}<extra></extra>'
+    elif cur == '¥':
+        ma_hover = f'{loc["ma"]}: ¥%{{y:,.0f}}<extra></extra>'
+    elif cur == 'HK$':
+        ma_hover = f'{loc["ma"]}: HK$%{{y:,.2f}}<extra></extra>'
+    elif cur == 'CNY':
+        ma_hover = f'{loc["ma"]}: ¥%{{y:,.2f}}<extra></extra>'
+    else:
+        ma_hover = f'{loc["ma"]}: %{{y:,.2f}} {cur}<extra></extra>'
+
+    vol_hover = f'{loc["vol"]}: %{{y:,.0f}}<extra></extra>'
+
     # 캔들스틱(봉) 차트 - 상승=빨강, 하락=파랑
     fig.add_trace(go.Candlestick(
         x=df.index,
@@ -244,7 +278,7 @@ def generate_chart(stock_info):
         high=df['High'],
         low=df['Low'],
         close=df['Close'],
-        name='주봉',
+        name=loc['weekly'],
         increasing=dict(line=dict(color='#EF5350'), fillcolor='#EF5350'),
         decreasing=dict(line=dict(color='#2962FF'), fillcolor='#2962FF'),
     ), row=1, col=1)
@@ -252,25 +286,25 @@ def generate_chart(stock_info):
     # 60일 이동평균선
     ma_data = df[f'MA{MA_DAYS}'].dropna()
     fig.add_trace(go.Scatter(
-        x=ma_data.index, y=ma_data, mode='lines', name='60일선',
+        x=ma_data.index, y=ma_data, mode='lines', name=loc['ma'],
         line=dict(color=MA_COLOR, width=1.2),
-        hovertemplate='60일선: %{y:,.0f}원<extra></extra>'
+        hovertemplate=ma_hover
     ), row=1, col=1)
 
     # 거래량 면적 차트 (모바일에서도 항상 보이도록 bar→area 변경)
     fig.add_trace(go.Scatter(
         x=df.index, y=df['Volume'],
-        name='거래량',
+        name=loc['vol'],
         mode='lines',
         fill='tozeroy',
         line=dict(color='#7986CB', width=0.5),
         fillcolor='rgba(121,134,203,0.4)',
-        hovertemplate='거래량: %{y:,.0f}<extra></extra>'
+        hovertemplate=vol_hover
     ), row=2, col=1)
 
     # 레이아웃
     fig.update_layout(
-        title=dict(text=f'{name} ({code}) 주가 차트 (주봉)',
+        title=dict(text=f'{name} ({code}) {loc["title_suffix"]}',
                    font=dict(size=18, color='#333333'), x=0.5, y=0.97),
         template='plotly_white', height=500, showlegend=True,
         legend=dict(orientation='h', yanchor='top', y=1.025,
