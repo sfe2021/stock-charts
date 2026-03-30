@@ -61,6 +61,9 @@ STOCKS = [
     {"ticker": "8035.T", "name": "Tokyo Electron", "code": "8035", "filename": "tokyoelectron.html"},
     {"ticker": "300750.SZ", "name": "CATL", "code": "300750", "filename": "catl.html"},
     {"ticker": "0700.HK", "name": "Tencent", "code": "0700", "filename": "tencent.html"},
+    {"ticker": "038070.KQ", "name": "서린바이오", "code": "038070", "filename": "serinbio.html"},
+    {"ticker": "108320.KS", "name": "LX세미콘", "code": "108320", "filename": "lxsemicon.html"},
+    {"ticker": "092220.KQ", "name": "KEC", "code": "092220", "filename": "kec.html"},
 ]
 
 MA_DAYS = 60

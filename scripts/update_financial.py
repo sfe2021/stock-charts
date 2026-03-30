@@ -437,6 +437,33 @@ STOCKS = [
         'annual_file': 'sbbtech_financial.html',
         'quarter_file': 'sbbtech_financial_q.html',
     },
+    {
+        'name': '서린바이오',
+        'code': '038070',
+        'corp_code': '00373447',
+        'ticker': '038070.KQ',
+        'capital': 4450338000,
+        'annual_file': 'serinbio_financial.html',
+        'quarter_file': 'serinbio_financial_q.html',
+    },
+    {
+        'name': 'LX세미콘',
+        'code': '108320',
+        'corp_code': '00525934',
+        'ticker': '108320.KS',
+        'capital': 8132150000,
+        'annual_file': 'lxsemicon_financial.html',
+        'quarter_file': 'lxsemicon_financial_q.html',
+    },
+    {
+        'name': 'KEC',
+        'code': '092220',
+        'corp_code': '00589127',
+        'ticker': '092220.KQ',
+        'capital': 100381570500,
+        'annual_file': 'kec_financial.html',
+        'quarter_file': 'kec_financial_q.html',
+    },
 ]
 
 # ===== DART API 헬퍼 =====
