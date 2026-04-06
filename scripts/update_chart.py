@@ -64,6 +64,7 @@ STOCKS = [
     {"ticker": "038070.KQ", "name": "서린바이오", "code": "038070", "filename": "serinbio.html"},
     {"ticker": "108320.KS", "name": "LX세미콘", "code": "108320", "filename": "lxsemicon.html"},
     {"ticker": "092220.KQ", "name": "KEC", "code": "092220", "filename": "kec.html"},
+    {"ticker": "000660.KS", "name": "SK하이닉스", "code": "000660", "filename": "skhynix.html"},
 ]
 
 MA_DAYS = 60

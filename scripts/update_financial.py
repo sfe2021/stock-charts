@@ -464,6 +464,15 @@ STOCKS = [
         'annual_file': 'kec_financial.html',
         'quarter_file': 'kec_financial_q.html',
     },
+    {
+        'name': 'SK하이닉스',
+        'code': '000660',
+        'corp_code': '00164779',
+        'ticker': '000660.KS',
+        'capital': 3657652000000,
+        'annual_file': 'skhynix_financial.html',
+        'quarter_file': 'skhynix_financial_q.html',
+    },
 ]
 
 # ===== DART API 헬퍼 =====
